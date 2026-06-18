@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Pengujian E2E Modul Dosen SIA UGN — Kelompok 1</title>
+<style>
+  :root{
+    --green:#015023; --green2:#044B33; --gold:#DABC4E; --bg:#f4f6f4;
+    --ink:#1f2937; --muted:#6b7280; --line:#e3e8e4; --card:#ffffff;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0; font-family:"Segoe UI",system-ui,-apple-system,Roboto,Arial,sans-serif;
+    color:var(--ink); background:var(--bg); line-height:1.65;
+  }
+  header.hero{
+    background:var(--green); color:#fff; padding:42px 24px 34px;
+    border-bottom:5px solid var(--gold);
+  }
+  .wrap{max-width:960px; margin:0 auto; padding:0 20px}
+  header.hero .wrap{padding:0 20px}
+  header.hero .eyebrow{color:var(--gold); font-weight:600; letter-spacing:.04em; font-size:.85rem; text-transform:uppercase; margin-bottom:8px}
+  header.hero h1{margin:0 0 6px; font-size:1.9rem; line-height:1.25}
+  header.hero p.sub{margin:6px 0 0; color:#d8e6dd; font-size:1.02rem}
+  header.hero .meta{margin-top:18px; font-size:.9rem; color:#cfe0d5}
+  nav.toc{
+    position:sticky; top:0; z-index:10; background:#fff; border-bottom:1px solid var(--line);
+    overflow-x:auto; white-space:nowrap; padding:10px 0;
+  }
+  nav.toc a{
+    color:var(--green2); text-decoration:none; font-size:.86rem; font-weight:600;
+    margin:0 12px; display:inline-block;
+  }
+  nav.toc a:hover{color:var(--gold)}
+  main{padding:30px 0 60px}
+  section{
+    background:var(--card); border:1px solid var(--line); border-radius:12px;
+    padding:24px 26px; margin:0 0 20px;
+  }
+  section h2{
+    color:var(--green); font-size:1.25rem; margin:0 0 4px;
+    border-left:4px solid var(--gold); padding-left:12px;
+  }
+  section h2 .num{color:var(--gold); margin-right:6px}
+  section h3{color:var(--green2); font-size:1rem; margin:22px 0 6px}
+  p{margin:10px 0}
+  .lead{color:var(--muted)}
+  ul,ol{margin:8px 0 8px; padding-left:22px}
+  li{margin:4px 0}
+  code{background:#eef2ef; color:#0b3d29; padding:1px 6px; border-radius:5px; font-size:.9em}
+  pre{
+    background:#0f241b; color:#e7f0ea; padding:16px 18px; border-radius:10px;
+    overflow-x:auto; font-size:.83rem; line-height:1.5; margin:12px 0;
+    font-family:"Consolas","SF Mono",Menlo,monospace;
+  }
+  pre .k{color:var(--gold)}      /* keyword Gherkin / anotasi */
+  pre .c{color:#7fae93}          /* komentar */
+  pre .s{color:#bfe3cd}          /* string */
+  table{width:100%; border-collapse:collapse; margin:12px 0; font-size:.9rem}
+  th,td{border:1px solid var(--line); padding:8px 10px; text-align:left; vertical-align:top}
+  th{background:#eef3ef; color:var(--green2)}
+  tr:nth-child(even) td{background:#fafbfa}
+  .pill{display:inline-block; padding:2px 9px; border-radius:999px; font-size:.78rem; font-weight:600}
+  .ok{background:#dcf0e5; color:#0b6b43}
+  .warn{background:#fdf2d6; color:#8a6300}
+  .crit{background:#fde2e1; color:#9b1c17}
+  .grid2{display:grid; grid-template-columns:1fr 1fr; gap:16px}
+  .stat{background:#eef3ef; border-radius:10px; padding:16px; text-align:center}
+  .stat .big{font-size:1.7rem; font-weight:700; color:var(--green)}
+  .stat .lbl{font-size:.82rem; color:var(--muted)}
+  .note{background:#fbf6e3; border-left:4px solid var(--gold); padding:12px 14px; border-radius:6px; font-size:.92rem}
+  .tree{font-family:Consolas,monospace; font-size:.82rem; background:#f6f8f6; border:1px solid var(--line); border-radius:8px; padding:14px 16px; white-space:pre; overflow-x:auto}
+  footer{color:var(--muted); font-size:.84rem; text-align:center; padding:24px}
+  @media(max-width:680px){ .grid2{grid-template-columns:1fr} header.hero h1{font-size:1.5rem} }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="eyebrow">Praktikum Pengujian Perangkat Lunak</div>
+    <h1>Pengujian End-to-End Modul Dosen (Tridharma &amp; PAK) — SIA UGN</h1>
+    <p class="sub">Automation testing dengan Selenium WebDriver + Cucumber (BDD/Gherkin) + Page Object Model</p>
+    <div class="meta">Kelompok 1 &middot; PAD 2 &nbsp;|&nbsp; Aplikasi: Sistem Informasi Akademik Universitas Global Nusantara</div>
+  </div>
+</header>
+
+<nav class="toc">
+  <div class="wrap">
+    <a href="#ringkasan">Ringkasan</a>
+    <a href="#sut">Aplikasi Diuji</a>
+    <a href="#tools">Tools</a>
+    <a href="#gherkin">Bukti Gherkin &amp; Cucumber</a>
+    <a href="#pom">POM</a>
+    <a href="#teknik">EP &amp; BVA</a>
+    <a href="#proses">Cara Pengerjaan</a>
+    <a href="#hasil">Hasil</a>
+    <a href="#bug">Bug</a>
+    <a href="#run">Cara Run</a>
+    <a href="#tugas">Pembagian Tugas</a>
+  </div>
+</nav>
+
+<main class="wrap">
+
+  <section id="ringkasan">
+    <h2><span class="num">1.</span>Ringkasan Proyek</h2>
+    <p>Kami menguji satu alur lengkap (end-to-end) dari modul Dosen pada aplikasi SIA UGN, mulai dari login
+    sampai mengelola data Tridharma dan Angka Kredit. Pengujian dilakukan secara otomatis: skrip akan membuka
+    Chrome sungguhan, mengetik, mengklik, dan memeriksa hasilnya seperti yang dilakukan dosen asli.</p>
+    <div class="grid2" style="margin-top:14px">
+      <div class="stat"><div class="big">6</div><div class="lbl">halaman diuji (syarat min. 5)</div></div>
+      <div class="stat"><div class="big">23 / 23</div><div class="lbl">skenario lulus</div></div>
+      <div class="stat"><div class="big">5</div><div class="lbl">file fitur Gherkin</div></div>
+      <div class="stat"><div class="big">3 + 1</div><div class="lbl">bug + observasi</div></div>
+    </div>
+  </section>
+
+  <section id="sut">
+    <h2><span class="num">2.</span>Aplikasi yang Diuji</h2>
+    <p>Aplikasi: <strong>SIA UGN</strong> (frontend Next.js, backend Laravel). Modul yang diuji adalah
+    modul <strong>Dosen</strong>: Tridharma (Penelitian, Publikasi) dan Penilaian Angka Kredit (PAK / BKD).</p>
+    <h3>Alur yang dilewati (6 halaman)</h3>
+    <p>Login &rarr; Dashboard &rarr; Angka Kredit &rarr; Input BKD &rarr; Penelitian &rarr; Kegiatan Mengajar</p>
+    <table>
+      <tr><th>#</th><th>Halaman</th><th>URL</th></tr>
+      <tr><td>1</td><td>Login</td><td><code>/loginpage</code></td></tr>
+      <tr><td>2</td><td>Dashboard</td><td><code>/dashboard</code></td></tr>
+      <tr><td>3</td><td>Angka Kredit</td><td><code>/dosen/angka-kredit</code></td></tr>
+      <tr><td>4</td><td>Input BKD</td><td><code>/dosen/angka-kredit/input-bkd</code></td></tr>
+      <tr><td>5</td><td>Penelitian (+ form tambah)</td><td><code>/dosen/penelitian</code></td></tr>
+      <tr><td>6</td><td>Kegiatan Mengajar</td><td><code>/dosen/kegiatan-mengajar</code></td></tr>
+    </table>
+
+    <h3>Apa yang diuji di tiap halaman</h3>
+    <table>
+      <tr><th>Halaman</th><th>Yang diuji (skenario)</th><th>Teknik</th></tr>
+      <tr><td><strong>Login</strong></td><td>Login berhasil dengan akun dosen valid; password salah; email tak terdaftar; email kosong; password kosong; format email tidak valid</td><td>EP + BVA</td></tr>
+      <tr><td><strong>Dashboard</strong></td><td>Memastikan user diarahkan ke <code>/dashboard</code> setelah login berhasil; menjadi titik awal navigasi alur E2E</td><td>Smoke / E2E</td></tr>
+      <tr><td><strong>Angka Kredit</strong></td><td>Halaman termuat (judul "Dashboard Angka Kredit"); navigasi ke Input BKD lewat tombol</td><td>Smoke / E2E</td></tr>
+      <tr><td><strong>Input BKD</strong></td><td>Halaman termuat; BVA nilai "Jumlah" (&minus;5, 0, 1, 2, 10 &rarr; otomatis dikoreksi minimal 1); submit BKD sampai muncul "BKD Berhasil Disubmit!"</td><td>BVA + Positif</td></tr>
+      <tr><td><strong>Penelitian</strong></td><td>Form tambah termuat; BVA field "Tahun" (3 / 4 / 5 digit) + Judul wajib &rarr; tombol "Selanjutnya" aktif/nonaktif</td><td>BVA + EP</td></tr>
+      <tr><td><strong>Kegiatan Mengajar</strong></td><td>Halaman termuat (judul "Dashboard Kegiatan Mengajar"); kolom pencarian menerima kata kunci mata kuliah</td><td>Smoke + Fungsional</td></tr>
+    </table>
+  </section>
+
+  <section id="tools">
+    <h2><span class="num">3.</span>Tools &amp; Teknologi</h2>
+    <table>
+      <tr><th>Komponen</th><th>Teknologi</th><th>Fungsi</th></tr>
+      <tr><td>Bahasa &amp; build</td><td>Java 17, Maven</td><td>Bahasa pemrograman test &amp; manajemen dependency</td></tr>
+      <tr><td>Browser automation</td><td>Selenium WebDriver 4.21</td><td>Mengendalikan Chrome (klik, ketik, navigasi)</td></tr>
+      <tr><td>BDD / Gherkin</td><td>Cucumber-JVM 7.18</td><td>Menulis skenario bahasa natural &amp; menjalankannya</td></tr>
+      <tr><td>Test runner</td><td>JUnit 5 Platform Suite</td><td>Menemukan &amp; menjalankan skenario Cucumber</td></tr>
+      <tr><td>Driver manager</td><td>WebDriverManager</td><td>Mengunduh ChromeDriver otomatis</td></tr>
+      <tr><td>Desain kode</td><td>Page Object Model (POM)</td><td>Memisahkan logika halaman dari logika test</td></tr>
+      <tr><td>Laporan</td><td>maven-cucumber-reporting</td><td>Generate report HTML otomatis</td></tr>
+    </table>
+  </section>
+
+  <section id="gherkin">
+    <h2><span class="num">4.</span>Bukti Penggunaan Gherkin &amp; Cucumber</h2>
+    <p>Inti dari BDD (Behavior Driven Development): skenario ditulis dalam bahasa natural memakai
+    <strong>Gherkin</strong> (kata kunci <code>Feature</code>, <code>Scenario</code>, <code>Given</code>,
+    <code>When</code>, <code>Then</code>), lalu <strong>Cucumber</strong> menjalankannya dengan
+    menghubungkan tiap baris ke kode Java.</p>
+
+    <h3>a. File Gherkin (.feature)</h3>
+    <p>Skenario disimpan di <code>src/test/resources/features/</code>. Contoh dari <code>login.feature</code>:</p>
+<pre><span class="k">@Login</span>
+<span class="k">Feature:</span> Login SIA UGN
+
+  <span class="k">Background:</span>
+    <span class="k">Given</span> saya membuka halaman login
+
+  <span class="k">@SmokeTest @Positive</span>
+  <span class="k">Scenario:</span> TC-LOGIN-01 - Login berhasil dengan kredensial dosen yang valid
+    <span class="k">When</span> saya login sebagai dosen dengan kredensial valid
+    <span class="k">Then</span> saya diarahkan ke halaman dashboard</pre>
+
+    <h3>b. Step Definition (jembatan Gherkin &rarr; Java)</h3>
+    <p>Tiap kalimat Gherkin dipetakan ke satu method Java (anotasi <code>@Given/@When/@Then</code> dari Cucumber).
+    Contoh dari <code>CommonSteps.java</code>:</p>
+<pre><span class="k">@When</span>(<span class="s">"saya login sebagai dosen dengan kredensial valid"</span>)
+<span class="k">public void</span> sayaLoginSebagaiDosenValid() {
+    loginPage.enterEmail(TestConfig.DOSEN_EMAIL);
+    loginPage.enterPassword(TestConfig.DOSEN_PASSWORD);
+    loginPage.clickLoginButton();
+}</pre>
+    <p>Saat dijalankan, Cucumber otomatis mencocokkan baris
+    <code>When saya login sebagai dosen dengan kredensial valid</code> dengan method di atas. Inilah bukti
+    bahwa Gherkin benar-benar dieksekusi oleh Cucumber, bukan sekadar teks.</p>
+
+    <h3>c. Runner Cucumber</h3>
+    <p>Kelas <code>CucumberRunner.java</code> memberi tahu JUnit + Cucumber lokasi file fitur dan kode step:</p>
+<pre><span class="k">@Suite</span>
+<span class="k">@IncludeEngines</span>(<span class="s">"cucumber"</span>)
+<span class="k">@SelectClasspathResource</span>(<span class="s">"features"</span>)
+<span class="k">@ConfigurationParameter</span>(key = GLUE_PROPERTY_NAME, value = <span class="s">"steps, hooks"</span>)
+<span class="k">public class</span> CucumberRunner { }</pre>
+
+    <div class="note"><strong>Cara membuktikan saat presentasi:</strong> buka salah satu file <code>.feature</code>
+    di IntelliJ, klik tombol Run (&#9658;) di samping skenario. Konsol akan menampilkan tiap baris Gherkin
+    diikuti nama method Java yang dijalankan (lihat bagian Hasil), lalu tanda <code>PASSED</code>. Itu bukti
+    konkret Gherkin + Cucumber bekerja.</div>
+  </section>
+
+  <section id="pom">
+    <h2><span class="num">5.</span>Struktur Page Object Model (POM)</h2>
+    <p>POM adalah pola di mana tiap halaman web diwakili satu kelas Java. Lokator (cara menemukan elemen) dan
+    aksinya dikumpulkan di satu tempat, sehingga skenario tetap bersih dan kalau UI berubah cukup ubah satu file.</p>
+    <div class="tree">src/test/java/
+├─ config/      TestConfig.java        (URL, akun, path halaman)
+├─ hooks/       CucumberHooks.java     (buka/tutup browser, screenshot saat gagal)
+├─ runner/      CucumberRunner.java    (menjalankan semua skenario)
+├─ locators/dosen/  *Locators.java     (kumpulan selector tiap halaman)
+├─ pages/       *Page.java             &lt;-- POM (LoginPage, InputBkdPage, dll)
+└─ steps/       *Steps.java            (step definition Gherkin)
+src/test/resources/features/  *.feature (skenario Gherkin)</div>
+    <p>Contoh potongan <code>LoginPage.java</code>:</p>
+<pre><span class="k">private static final</span> By EMAIL_INPUT = By.cssSelector(<span class="s">"#email"</span>);
+<span class="k">private static final</span> By PASSWORD_INPUT = By.cssSelector(<span class="s">"#password"</span>);
+
+<span class="k">public void</span> login(String email, String password) {
+    openLoginPage();
+    enterEmail(email);
+    enterPassword(password);
+    clickLoginButton();
+}</pre>
+  </section>
+
+  <section id="teknik">
+    <h2><span class="num">6.</span>Teknik Desain Test Case: EP &amp; BVA</h2>
+    <p>Test case tidak dibuat asal-asalan, tapi memakai dua teknik standar:</p>
+    <ul>
+      <li><strong>Equivalence Partitioning (EP):</strong> membagi input menjadi kelompok yang diperlakukan sama,
+      cukup uji satu wakil per kelompok (mis. email valid vs salah vs kosong).</li>
+      <li><strong>Boundary Value Analysis (BVA):</strong> menguji nilai di batas, tempat bug paling sering muncul.</li>
+    </ul>
+
+    <h3>Contoh BVA — field "Jumlah" pada Input BKD (minimal 1)</h3>
+    <p>Dari <code>input-bkd.feature</code> (Scenario Outline — satu skenario, banyak data):</p>
+<pre><span class="k">Scenario Outline:</span> BVA field Jumlah (input &lt;input&gt; menjadi &lt;tersimpan&gt;)
+  <span class="k">When</span> saya pilih jenis kegiatan pertama
+  <span class="k">And</span> saya isi Jumlah dengan <span class="s">"&lt;input&gt;"</span>
+  <span class="k">Then</span> nilai Jumlah yang tersimpan adalah <span class="s">"&lt;tersimpan&gt;"</span>
+
+  <span class="k">Examples:</span>
+    | input | tersimpan |
+    |  -5   |     1     |
+    |   0   |     1     |
+    |   1   |     1     |
+    |   2   |     2     |
+    |  10   |    10     |</pre>
+    <table>
+      <tr><th>Nilai uji</th><th>Partisi</th><th>Diharapkan</th></tr>
+      <tr><td>-5</td><td>di bawah batas (invalid)</td><td>dikoreksi jadi 1</td></tr>
+      <tr><td>0</td><td>di bawah batas (invalid)</td><td>dikoreksi jadi 1</td></tr>
+      <tr><td>1</td><td>batas bawah (valid)</td><td>1</td></tr>
+      <tr><td>2, 10</td><td>dalam rentang (valid)</td><td>2, 10</td></tr>
+    </table>
+
+    <h3>Contoh BVA — field "Tahun" pada Penelitian (harus 4 digit)</h3>
+    <p>Tombol "Selanjutnya" hanya aktif jika tahun tepat 4 digit. Diuji: 3 digit (kurang), 4 digit (pas),
+    5 digit (lebih) &mdash; <code>202</code> nonaktif, <code>2026</code> aktif, <code>20266</code> nonaktif.</p>
+  </section>
+
+  <section id="proses">
+    <h2><span class="num">7.</span>Cara Pengerjaan (Metodologi)</h2>
+    <p>Langkah-langkah yang kami tempuh dari awal sampai laporan:</p>
+    <ol>
+      <li><strong>Analisis aplikasi.</strong> Menentukan satu alur end-to-end yang masuk akal untuk dosen
+      (login sampai mengelola Tridharma), lalu mendata halaman dan elemennya.</li>
+      <li><strong>Desain test case.</strong> Menyusun test suite memakai EP &amp; BVA (lihat
+      <code>test-suite/TEST-SUITE.md</code> dan <code>test-cases.csv</code>).</li>
+      <li><strong>Menulis skenario Gherkin.</strong> Menerjemahkan test case ke file <code>.feature</code>
+      (Given/When/Then) supaya mudah dibaca dosen maupun anggota non-teknis.</li>
+      <li><strong>Membangun Page Object Model.</strong> Membuat kelas per halaman + kumpulan lokator,
+      sehingga selector terpusat dan rapi.</li>
+      <li><strong>Implementasi step definition.</strong> Menghubungkan tiap baris Gherkin ke aksi Selenium
+      (mengetik, klik, memilih dropdown, memeriksa teks).</li>
+      <li><strong>Menjalankan &amp; debugging.</strong> Menjalankan lawan aplikasi yang hidup, memperbaiki
+      sinkronisasi (explicit wait) dan cara berinteraksi dengan komponen React.</li>
+      <li><strong>Pencatatan bug.</strong> Mencatat temuan ke <code>docs/BUG-REPORT.md</code>.</li>
+      <li><strong>Laporan otomatis.</strong> Mengaktifkan report HTML yang ter-generate tiap kali test
+      dijalankan (nilai tambahan).</li>
+    </ol>
+    <div class="note">Catatan teknis yang menarik dibahas saat presentasi: aplikasi memakai React, sehingga
+    input tidak cukup diisi dengan cara biasa &mdash; kami memicu event <code>input/change</code> agar React
+    mendeteksi perubahan. Beberapa tombol juga perlu diklik lewat JavaScript agar tidak terhalang navbar.</div>
+  </section>
+
+  <section id="hasil">
+    <h2><span class="num">8.</span>Hasil Pengujian</h2>
+    <p>Seluruh skenario dijalankan lawan aplikasi yang berjalan (frontend di <code>localhost:3001</code>,
+    backend via Laragon). Hasil akhir:</p>
+<pre><span class="c">========================================
+   RINGKASAN EKSEKUSI</span>
+   PASSED : 23
+   FAILED : 0
+   TOTAL  : 23
+<span class="c">========================================</span>
+[INFO] Tests run: 23, Failures: 0, Errors: 0
+[INFO] BUILD SUCCESS</pre>
+    <p>Laporan lengkap dihasilkan otomatis di:</p>
+    <ul>
+      <li><code>target/cucumber-reports/cucumber-report.html</code> — ringkas, satu file.</li>
+      <li><code>target/cucumber-html-reports/cucumber-html-reports/overview-features.html</code> — lengkap (grafik + per-fitur).</li>
+      <li><code>target/screenshots/</code> — screenshot otomatis bila ada skenario gagal.</li>
+    </ul>
+  </section>
+
+  <section id="bug">
+    <h2><span class="num">9.</span>Bug yang Ditemukan</h2>
+    <p>Detail lengkap (langkah reproduksi, expected vs actual, bukti) ada di <code>docs/BUG-REPORT.md</code>.</p>
+    <table>
+      <tr><th>ID</th><th>Temuan</th><th>Severity</th><th>Status</th></tr>
+      <tr><td>BUG-01</td><td>Field "Jumlah" di Input BKD mengoreksi input tidak valid (0, -5) menjadi 1 secara diam-diam tanpa pesan</td><td><span class="pill warn">Minor</span></td><td>dikonfirmasi test TC-BKD-02</td></tr>
+      <tr><td>BUG-02</td><td>Validasi "Tahun" hanya cek 4 digit, sehingga tahun tak masuk akal seperti 0000 tetap dianggap valid</td><td><span class="pill warn">Minor</span></td><td>Open</td></tr>
+      <tr><td>BUG-03</td><td>Redirect setelah login mengasumsikan satu role; akun multi-role berpotensi tidak ter-redirect</td><td><span class="pill crit">Major</span></td><td>Open</td></tr>
+      <tr><td>OBS-01</td><td>Email tak terdaftar menampilkan pesan generik yang sama dengan password salah (umumnya disengaja untuk keamanan)</td><td><span class="pill ok">Info</span></td><td>by design</td></tr>
+    </table>
+  </section>
+
+  <section id="run">
+    <h2><span class="num">10.</span>Cara Menjalankan</h2>
+    <ol>
+      <li>Nyalakan backend (Laragon: Start All) dan pastikan API merespons.</li>
+      <li>Nyalakan frontend: <code>npm run dev -- -p 3001</code> di folder frontend, tunggu sampai "Ready".</li>
+      <li>Jalankan test:
+        <pre>cd sia-ugn-testing
+mvn clean verify</pre>
+      </li>
+      <li>Untuk menonton browser bergerak saat demo: set <code>HEADLESS=false</code> sebelum menjalankan.</li>
+      <li>Di IntelliJ: buka folder sebagai project Maven, lalu Run <code>CucumberRunner</code> (atau run per file <code>.feature</code>).</li>
+    </ol>
+  </section>
+
+  <section id="tugas">
+    <h2><span class="num">11.</span>Pembagian Tugas</h2>
+    <p class="lead">Pembagian sesuai kontribusi commit di GitHub (silakan ganti handle dengan nama lengkap masing-masing):</p>
+    <table>
+      <tr><th>Anggota</th><th>Tanggung jawab</th></tr>
+      <tr><td>muhamadabel</td><td>Modul <strong>Angka Kredit &amp; Input BKD</strong> (BVA field Jumlah) + setup project (Maven, runner, hooks, BasePage)</td></tr>
+      <tr><td>NaelSucksAtCoding</td><td>Modul <strong>Login &amp; Dashboard</strong> (Gherkin + POM + step) + navigasi navbar</td></tr>
+      <tr><td>exenthiast</td><td>Modul <strong>Penelitian</strong> (BVA field Tahun + EP judul) + dokumen test suite (EP/BVA)</td></tr>
+      <tr><td>dannysetiawan06</td><td>Modul <strong>Kegiatan Mengajar</strong> + alur End-to-End + bug report + halaman presentasi</td></tr>
+    </table>
+  </section>
+
+</main>
+
+<footer>
+  Dokumentasi pengujian E2E modul Dosen SIA UGN &middot; Kelompok 1 PAD 2 &middot; Praktikum Pengujian Perangkat Lunak
+</footer>
+
+</body>
+</html>
