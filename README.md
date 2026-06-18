@@ -1,182 +1,151 @@
-# PPL - Pengujian Sistem Informasi Akademik (SIA-UGN)
+<div align="center">
 
-> Repositori ini merupakan bagian dari tugas akhir mata kuliah **Praktikum Pengujian Perangkat Lunak** yang berfokus pada pengujian fungsional Sistem Informasi Akademik (SIA-UGN) modul **Dosen (Tridharma & Penilaian Angka Kredit / PAK)** menggunakan framework **Cucumber + Selenium** dengan pola desain **Page Object Model (POM)**.
+<img src="https://img.shields.io/badge/SIA--UGN-E2E%20TESTING-015023?style=for-the-badge&labelColor=DABC4E" alt="SIA-UGN E2E Testing" />
 
----
+# Pengujian End-to-End — Modul Dosen SIA-UGN
 
-## System Under Test (SUT)
+**Tridharma &amp; Penilaian Angka Kredit (PAK)**
 
-**Sistem Informasi Akademik (SIA-UGN) — Modul Dosen** adalah aplikasi berbasis web untuk mengelola kegiatan Tridharma dosen dan perhitungan Angka Kredit. Sistem ini mencakup autentikasi dosen, pencatatan Beban Kerja Dosen (BKD), pengajuan penelitian, serta rekap kegiatan mengajar.
+_Automated UI Testing · BDD (Gherkin) · Page Object Model_
 
-Halaman yang menjadi cakupan pengujian (alur end-to-end, 6 halaman):
+<br/>
 
-| Halaman           | Deskripsi                                                       |
-| ----------------- | -------------------------------------------------------------- |
-| Login             | Autentikasi dosen ke dalam sistem                              |
-| Dashboard         | Halaman utama setelah login (jadwal harian & pengumuman)       |
-| Angka Kredit      | Dashboard angka kredit (PAK) dan navigasi ke Input BKD         |
-| Input BKD         | Input beban kerja dosen / kegiatan Tridharma per kategori      |
-| Penelitian        | Form pengajuan penelitian baru                                 |
-| Kegiatan Mengajar | Daftar mata kuliah yang diampu beserta status & angka kreditnya |
+![Java](https://img.shields.io/badge/Java-17-015023?style=for-the-badge&logo=openjdk&logoColor=white)
+![Selenium](https://img.shields.io/badge/Selenium-4.21-015023?style=for-the-badge&logo=selenium&logoColor=white)
+![Cucumber](https://img.shields.io/badge/Cucumber-7.18-015023?style=for-the-badge&logo=cucumber&logoColor=white)
+![JUnit5](https://img.shields.io/badge/JUnit-5-015023?style=for-the-badge&logo=junit5&logoColor=white)
+![Maven](https://img.shields.io/badge/Maven-build-015023?style=for-the-badge&logo=apachemaven&logoColor=white)
 
----
+![Tests](https://img.shields.io/badge/Tests-23%2F23%20PASSING-1a7f37?style=for-the-badge)
+![POM](https://img.shields.io/badge/Pattern-Page%20Object%20Model-DABC4E?style=for-the-badge&labelColor=015023)
+![BDD](https://img.shields.io/badge/Approach-BDD%20Gherkin-DABC4E?style=for-the-badge&labelColor=015023)
 
-## Test Suite
-
-Test suite dibangun menggunakan **Cucumber (BDD)** dan **Selenium WebDriver** dengan bahasa Java. Skenario ditulis dalam format **Gherkin** (`.feature`) sehingga memisahkan perilaku bisnis dari implementasi teknis. Desain test case memakai teknik **Equivalence Partitioning (EP)** dan **Boundary Value Analysis (BVA)**.
-
-### Framework & Tools
-
-| Komponen           | Teknologi                         |
-| ------------------ | --------------------------------- |
-| Bahasa Pemrograman | Java 17                           |
-| BDD Framework      | Cucumber                          |
-| UI Automation      | Selenium WebDriver                |
-| Test Runner        | JUnit 5 (via `CucumberRunner.java`) |
-| Pola Desain        | Page Object Model (POM)           |
-| Build Tool         | Maven                             |
-
-### Feature Files (Skenario Pengujian)
-
-| File                        | Modul yang Diuji                           | Teknik     |
-| --------------------------- | ------------------------------------------ | ---------- |
-| `login.feature`             | Login dosen                                | EP + BVA   |
-| `input-bkd.feature`         | Input BKD (field Jumlah)                   | BVA        |
-| `penelitian.feature`        | Pengajuan penelitian (field Tahun & Judul) | BVA + EP   |
-| `kegiatan-mengajar.feature` | Dashboard kegiatan mengajar                | Smoke      |
-| `e2e-dosen-pak.feature`     | Alur end-to-end lintas 6 halaman           | E2E        |
+</div>
 
 ---
 
-## Pembagian Tugas Kelompok
+> [!NOTE]
+> **Tugas Akhir Praktikum Pengujian Perangkat Lunak — Kelompok 1 (PAD 2).**
+> Menguji satu alur lengkap modul **Dosen** pada Sistem Informasi Akademik Universitas Global Nusantara (SIA-UGN): autentikasi, beban kerja dosen (BKD), angka kredit, penelitian, dan kegiatan mengajar.
 
-| Nama                  | Bagian                              | File Utama                                                                                       |
-| --------------------- | ----------------------------------- | ------------------------------------------------------------------------------------------------ |
-| **muhamadabel**       | Modul **Angka Kredit & Input BKD** (+ setup project) | `input-bkd.feature`, `InputBkdPage.java`, `AngkaKreditPage.java`, `BkdSteps.java` + `pom.xml`, `CucumberRunner.java`, `CucumberHooks.java`, `TestConfig.java`, `BasePage.java` |
-| **NaelSucksAtCoding** | Modul **Login & Dashboard**                          | `login.feature`, `LoginPage.java`, `LoginSteps.java`, `CommonSteps.java`, `DashboardPage.java`, `NavbarComponent.java` |
-| **exenthiast**        | Modul **Penelitian**                                 | `penelitian.feature`, `PenelitianPage.java`, `PenelitianTambahPage.java`, `PenelitianSteps.java` + `TEST-SUITE.md` (EP/BVA) |
-| **dannysetiawan06**   | Modul **Kegiatan Mengajar** (+ E2E & dokumentasi)    | `kegiatan-mengajar.feature`, `KegiatanMengajarPage.java`, `KegiatanMengajarSteps.java` + `e2e-dosen-pak.feature`, `BUG-REPORT.md`, `presentasi.html` |
+## 🧭 Alur Pengujian — 6 Halaman
 
----
+```
+Login  →  Dashboard  →  Angka Kredit  →  Input BKD  →  Penelitian  →  Kegiatan Mengajar
+```
 
-## Struktur Repositori
+| # | Halaman | Yang Diuji | Teknik |
+|:-:|---------|------------|:------:|
+| 1 | **Login** | Kredensial valid · password salah · akun tak terdaftar · field kosong · format email | `EP` · `BVA` |
+| 2 | **Dashboard** | Redirect otomatis setelah login berhasil | `Smoke` |
+| 3 | **Angka Kredit** | Halaman termuat + navigasi ke Input BKD | `Smoke` |
+| 4 | **Input BKD** | Validasi field Jumlah (−5, 0, 1, 2, 10 → dikoreksi min. 1) + submit BKD | `BVA` |
+| 5 | **Penelitian** | Validasi Tahun (3 / 4 / 5 digit) + Judul wajib | `BVA` · `EP` |
+| 6 | **Kegiatan Mengajar** | Halaman termuat + pencarian mata kuliah | `Smoke` |
+
+## 👥 Tim &amp; Pembagian Modul
+
+| Anggota | Modul yang Dikerjakan |
+|---------|-----------------------|
+| 🧩 **muhamadabel** | Angka Kredit &amp; Input BKD · setup project |
+| 🔐 **NaelSucksAtCoding** | Login &amp; Dashboard |
+| 🔬 **exenthiast** | Penelitian · test suite (EP/BVA) |
+| 📚 **dannysetiawan06** | Kegiatan Mengajar · alur End-to-End · dokumentasi |
+
+## 🧪 Teknik Desain Test Case
+
+<table>
+<tr>
+<td width="50%" valign="top">
+
+### Equivalence Partitioning (EP)
+Membagi input menjadi kelompok yang diperlakukan sama, lalu menguji **satu wakil** per kelompok — mis. email **valid** / **salah** / **kosong**.
+
+</td>
+<td width="50%" valign="top">
+
+### Boundary Value Analysis (BVA)
+Menguji nilai tepat di **batas** (tempat bug paling sering muncul) — mis. Tahun **3 / 4 / 5** digit, atau Jumlah **0 / 1 / 2**.
+
+</td>
+</tr>
+</table>
+
+## 🛠️ Teknologi &amp; Dependensi
+
+| Komponen | Teknologi | Versi |
+|----------|-----------|:-----:|
+| Bahasa Pemrograman | Java | 17 |
+| UI Automation | Selenium WebDriver | 4.21.0 |
+| BDD Framework | Cucumber-JVM | 7.18.0 |
+| Test Runner | JUnit 5 Platform Suite | 5.10.2 |
+| Driver Manager | WebDriverManager | 5.8.0 |
+| Build &amp; Report | Maven · maven-cucumber-reporting | 5.8.1 |
+
+## 📁 Struktur Proyek
+
+<details>
+<summary><b>📂 Klik untuk melihat struktur folder</b></summary>
+
+<br/>
 
 ```
 sia-ugn-testing/
-│
-├── data/
-│   └── data_requirements.md                 # Kebutuhan data uji (akun, prasyarat BE)
-│
-├── docs/
-│   ├── BUG-REPORT.md                         # Laporan bug yang ditemukan
-│   └── presentasi.html                       # Halaman dokumentasi/presentasi
-│
-├── test-suite/
-│   ├── TEST-SUITE.md                         # Analisis EP/BVA + tabel test case
-│   └── test-cases.csv                        # Test case (siap impor ke spreadsheet)
-│
+├── data/                            # Kebutuhan data uji
+├── docs/                            # Bug report + halaman presentasi
+├── test-suite/                      # Test case (EP/BVA) — MD + CSV
 ├── src/
-│   ├── main/java/org/example/Main.java
-│   │
+│   ├── main/java/org/example/       # Main (placeholder)
 │   └── test/
 │       ├── java/
-│       │   ├── config/
-│       │   │   └── TestConfig.java           # Konfigurasi global (base URL, akun, path)
-│       │   ├── hooks/
-│       │   │   └── CucumberHooks.java         # Setup/teardown browser + screenshot saat gagal
-│       │   ├── locators/dosen/                # Kumpulan locator elemen UI tiap halaman
-│       │   ├── pages/                         # Page Object Model (BasePage + halaman dosen)
-│       │   ├── runner/
-│       │   │   └── CucumberRunner.java        # Entry point eksekusi test suite
-│       │   └── steps/                         # Step definitions (implementasi Gherkin)
-│       │
+│       │   ├── config/              # TestConfig (base URL, akun, path)
+│       │   ├── hooks/               # CucumberHooks (driver + screenshot on fail)
+│       │   ├── locators/dosen/      # Selector elemen UI tiap halaman
+│       │   ├── pages/               # Page Object Model
+│       │   ├── runner/              # CucumberRunner (JUnit Platform Suite)
+│       │   └── steps/               # Step definitions (glue Gherkin → Selenium)
 │       └── resources/
-│           ├── features/                      # File skenario Gherkin (.feature)
-│           │   ├── login.feature
-│           │   ├── input-bkd.feature
-│           │   ├── penelitian.feature
-│           │   ├── kegiatan-mengajar.feature
-│           │   └── e2e-dosen-pak.feature
-│           └── cucumber.properties            # Konfigurasi Cucumber
-│
+│           ├── features/            # Skenario Gherkin (.feature)
+│           └── cucumber.properties
 ├── pom.xml
-├── .gitignore
 └── README.md
 ```
 
----
+</details>
 
-## Arsitektur dan Pola (Pattern)
+## ▶️ Cara Menjalankan
 
-### 1. Behavior-Driven Development (BDD) dengan Cucumber
-- **Feature**: ditulis dalam sintaks Gherkin (Given, When, Then) agar mudah dibaca pihak non-teknis.
-- **Steps**: setiap baris Gherkin punya method padanan di Java yang terikat lewat anotasi Cucumber (`@Given`, `@When`, `@Then`).
+> [!IMPORTANT]
+> Backend (Laravel via **Laragon**) &amp; Frontend (`npm run dev -- -p 3001`) harus berjalan dulu.
+> Akun uji: `dosen@gmail.com` / `dosen123`.
 
-### 2. Page Object Model (POM)
-- **BasePage**: menyimpan utilitas Selenium (explicit wait, klik, ketik, dll.) dan mengambil instance driver statis dari `CucumberHooks`.
-- **Pages & Locators**: tiap halaman dosen direpresentasikan satu kelas; lokator UI dipisah di `locators/dosen` agar step definition tetap bersih.
+```bash
+git clone https://github.com/muhamadabel/PPPL-UAS.git
+cd PPPL-UAS
+mvn clean verify        # jalankan semua test + generate report HTML
+```
 
----
+> [!TIP]
+> Jalankan modul tertentu saja → `mvn test -Dcucumber.filter.tags="@Login"`
+> Mau lihat browser bergerak saat demo → set `HEADLESS=false` lebih dulu.
 
-## Manajemen WebDriver
+## 📊 Hasil &amp; Laporan
 
-WebDriver diinisialisasi statis menggunakan ChromeDriver lewat hooks Cucumber (`CucumberHooks.java`):
-- `@Before`: WebDriverManager mengambil binary ChromeDriver otomatis, menyusun argumen Chrome, lalu membuka `TestConfig.BASE_URL`.
-- `@After`: menutup browser (`driver.quit()`); bila skenario gagal, screenshot otomatis ditangkap & disimpan ke laporan dan folder `target/screenshots`.
+- ✅ **23 / 23 skenario PASS** (`mvn clean verify`)
+- 📈 Report HTML otomatis → `target/cucumber-html-reports/`
+- 🐞 Bug report → [`docs/BUG-REPORT.md`](docs/BUG-REPORT.md)
+- 📋 Test suite EP/BVA → [`test-suite/TEST-SUITE.md`](test-suite/TEST-SUITE.md)
+- 🖥️ Dokumentasi / presentasi → [`docs/presentasi.html`](docs/presentasi.html)
 
----
+## 🔀 Konvensi Git
 
-## Dependensi Utama (`pom.xml`)
+Tiap anggota bekerja di branch `feature/<nama>-<modul>`, lalu **Pull Request** ke `main` untuk direview sebelum di-merge.
 
-| Dependensi                                         | Versi  |
-| -------------------------------------------------- | ------ |
-| `selenium-java`                                    | 4.21.0 |
-| `webdrivermanager`                                 | 5.8.0  |
-| `cucumber-java` & `cucumber-junit-platform-engine` | 7.18.0 |
-| `junit-jupiter`                                    | 5.10.2 |
-| `junit-platform-suite`                             | 1.10.2 |
-| `maven-cucumber-reporting` (laporan HTML)          | 5.8.1  |
+<div align="center">
+<br/>
 
----
+![UGN](https://img.shields.io/badge/Universitas%20Global%20Nusantara-Praktikum%20Pengujian%20PL-015023?style=flat-square&labelColor=DABC4E)
 
-## Cara Menjalankan Pengujian
+<sub>© 2026 · Kelompok 1 PAD 2</sub>
 
-Aplikasi diuji secara lokal, jadi backend & frontend harus berjalan dulu.
-
-1. **Clone** repositori:
-   ```bash
-   git clone https://github.com/USERNAME/NAMA-REPO.git
-   cd NAMA-REPO
-   ```
-
-2. Pastikan **Java JDK 17+**, **Maven**, dan **Google Chrome** sudah terpasang.
-
-3. Jalankan backend (Laravel via Laragon) dan frontend Next.js:
-   ```bash
-   # frontend
-   cd Fe-SIA-UGN-kelompok1
-   npm run dev -- -p 3001
-   ```
-   Akun uji: `dosen@gmail.com` / `dosen123`.
-
-4. Jalankan seluruh test suite (sesuaikan `BASE_URL` bila port FE berbeda):
-   ```bash
-   mvn clean verify
-   ```
-   Laporan HTML otomatis dibuat di `target/cucumber-html-reports/`.
-
-5. Menjalankan modul tertentu saja (lewat tag Cucumber):
-   ```bash
-   mvn test -Dcucumber.filter.tags="@Login"
-   ```
-
----
-
-## Konvensi Git
-
-- Setiap anggota mengerjakan bagiannya pada branch masing-masing dengan format:
-  ```
-  feature/<nama>-<modul>
-  ```
-  Contoh: `feature/abel-setup`, `feature/nael-login`, `feature/alfiz-bkd`, `feature/danny-e2e`
-- Setelah selesai, buat **Pull Request** ke branch `main` untuk direview sebelum di-merge.
+</div>
