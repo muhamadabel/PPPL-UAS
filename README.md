@@ -113,21 +113,78 @@ sia-ugn-testing/
 
 </details>
 
-## ▶️ Cara Menjalankan
+## ⚙️ Prasyarat
 
-> [!IMPORTANT]
-> Backend (Laravel via **Laragon**) &amp; Frontend (`npm run dev -- -p 3001`) harus berjalan dulu.
-> Akun uji: `dosen@gmail.com` / `dosen123`.
+| Tool | Versi | Untuk |
+|------|:-----:|-------|
+| Git | — | clone repositori |
+| **Laragon** (PHP 8.3+, Composer, MySQL/MariaDB) | — | menjalankan backend Laravel |
+| Node.js + npm | 18+ | menjalankan frontend Next.js |
+| Java JDK | 17+ | menjalankan test |
+| Maven | 3.9+ | build &amp; eksekusi test |
+| Google Chrome | terbaru | dikendalikan Selenium |
 
+## 🚀 Setup &amp; Menjalankan
+
+Test ini meng-otomasi UI aplikasi nyata, jadi **backend + frontend SIA-UGN harus berjalan lebih dulu**.
+
+### 1️⃣ Clone semua repositori
 ```bash
+# Backend Laravel — berisi modul dosen Kelompok 1
+git clone -b kel1-be-integrate https://github.com/muhamadabel/Be-SIA-UGN-kelompok1.git Be-SIA-UGN
+
+# Frontend Next.js
+git clone -b kel1-fe-integrate https://github.com/muhamadabel/Fe-SIA-UGN-kelompok1.git Fe-SIA-UGN-kelompok1
+
+# Repositori pengujian (ini)
 git clone https://github.com/muhamadabel/PPPL-UAS.git
-cd PPPL-UAS
-mvn clean verify        # jalankan semua test + generate report HTML
+```
+
+### 2️⃣ Backend — Laravel (via Laragon)
+Salin folder `Be-SIA-UGN` ke `C:\laragon\www\`, lalu:
+```bash
+cd C:\laragon\www\Be-SIA-UGN
+composer install
+copy .env.example .env
+php artisan key:generate
+php artisan migrate --seed      # buat tabel + akun demo
+```
+> [!NOTE]
+> Sesuaikan `.env` backend (nilai default Laragon):
+> ```env
+> APP_URL=http://localhost/Be-SIA-UGN/public
+> DB_DATABASE=be_sia_ugn
+> DB_USERNAME=root
+> DB_PASSWORD=
+> ```
+> Buat database kosong `be_sia_ugn` dulu (phpMyAdmin/HeidiSQL bawaan Laragon), lalu klik **Start All** di Laragon (Apache + MySQL).
+> ➜ API aktif di `http://localhost/Be-SIA-UGN/public/api`
+
+### 3️⃣ Frontend — Next.js
+```bash
+cd Fe-SIA-UGN-kelompok1
+npm install
+```
+Buat file `.env.local` berisi:
+```env
+NEXT_PUBLIC_API_BASE_URL=http://localhost/Be-SIA-UGN/public/api
+```
+Lalu jalankan di port **3001**:
+```bash
+npm run dev -- -p 3001
+```
+🔑 Akun demo (hasil seed): `dosen@gmail.com` / `dosen123`
+
+### 4️⃣ Jalankan Pengujian
+Pastikan BE + FE sudah berjalan, lalu di folder repo ini:
+```bash
+mvn clean verify        # semua test + generate report HTML
 ```
 
 > [!TIP]
-> Jalankan modul tertentu saja → `mvn test -Dcucumber.filter.tags="@Login"`
-> Mau lihat browser bergerak saat demo → set `HEADLESS=false` lebih dulu.
+> FE jalan di port lain? → `set BASE_URL=http://localhost:PORT` dulu (Windows) sebelum `mvn`.
+> Jalankan satu modul saja → `mvn test -Dcucumber.filter.tags="@Login"`
+> Mau lihat browser bergerak saat demo → `set HEADLESS=false`
 
 ## 📊 Hasil &amp; Laporan
 
