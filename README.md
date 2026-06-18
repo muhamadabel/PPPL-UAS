@@ -16,7 +16,7 @@ _Automated UI Testing · BDD (Gherkin) · Page Object Model_
 ![JUnit5](https://img.shields.io/badge/JUnit-5-015023?style=for-the-badge&logo=junit5&logoColor=white)
 ![Maven](https://img.shields.io/badge/Maven-build-015023?style=for-the-badge&logo=apachemaven&logoColor=white)
 
-![Tests](https://img.shields.io/badge/Tests-23%2F23%20PASSING-1a7f37?style=for-the-badge)
+![Skenario](https://img.shields.io/badge/Skenario-23%20otomatis-1a7f37?style=for-the-badge)
 ![POM](https://img.shields.io/badge/Pattern-Page%20Object%20Model-DABC4E?style=for-the-badge&labelColor=015023)
 ![BDD](https://img.shields.io/badge/Approach-BDD%20Gherkin-DABC4E?style=for-the-badge&labelColor=015023)
 
@@ -115,80 +115,83 @@ sia-ugn-testing/
 
 ## ⚙️ Prasyarat
 
+Mode default menguji aplikasi yang **sudah di-hosting**, jadi **tidak perlu install BE/FE**:
+
 | Tool | Versi | Untuk |
 |------|:-----:|-------|
 | Git | — | clone repositori |
-| **Laragon** (PHP 8.3+, Composer, MySQL/MariaDB) | — | menjalankan backend Laravel |
-| Node.js + npm | 18+ | menjalankan frontend Next.js |
 | Java JDK | 17+ | menjalankan test |
 | Maven | 3.9+ | build &amp; eksekusi test |
 | Google Chrome | terbaru | dikendalikan Selenium |
 
-## 🚀 Setup &amp; Menjalankan
+## 🚀 Cara Menjalankan (tercepat — tanpa install aplikasi)
 
-Test ini meng-otomasi UI aplikasi nyata, jadi **backend + frontend SIA-UGN harus berjalan lebih dulu**.
+Secara default test menunjuk ke deployment hosted **`https://sia.trisuladana.com`**, jadi cukup:
 
-### 1️⃣ Clone semua repositori
 ```bash
-# Backend Laravel — berisi modul dosen Kelompok 1
-git clone -b kel1-be-integrate https://github.com/muhamadabel/Be-SIA-UGN-kelompok1.git Be-SIA-UGN
-
-# Frontend Next.js
-git clone -b kel1-fe-integrate https://github.com/muhamadabel/Fe-SIA-UGN-kelompok1.git Fe-SIA-UGN-kelompok1
-
-# Repositori pengujian (ini)
 git clone https://github.com/muhamadabel/PPPL-UAS.git
+cd PPPL-UAS
+mvn clean verify        # semua skenario + generate report HTML
 ```
 
-### 2️⃣ Backend — Laravel (via Laragon)
-Salin folder `Be-SIA-UGN` ke `C:\laragon\www\`, lalu:
+Report HTML otomatis dibuat di `target/cucumber-html-reports/`.
+
+> [!IMPORTANT]
+> Saat ini **8 skenario Input BKD** masih merah karena endpoint `api/lecturer/bkd/master-kegiatan` **belum ter-redeploy ke VPS hosting**. Begitu backend di-redeploy, skenario tersebut **otomatis hijau tanpa mengubah kode test**. 15 skenario lain (Login, Dashboard, Angka Kredit, Penelitian, Kegiatan Mengajar) sudah hijau.
+
+> [!TIP]
+> Jalankan satu modul → `mvn test -Dcucumber.filter.tags="@Login"`
+> Mau lihat browser bergerak (demo) → `set HEADLESS=false`
+
+## 🖥️ Opsional — Jalankan Lawan Lokal (full 23/23)
+
+Kalau ingin **semua** skenario hijau (termasuk Input BKD) atau testing offline, jalankan SIA-UGN secara lokal. Prasyarat tambahan: **Laragon** (PHP 8.3+, Composer, MySQL) &amp; **Node.js 18+**.
+
+<details>
+<summary><b>📦 Langkah setup lokal (klik untuk buka)</b></summary>
+
+<br/>
+
+**1. Clone backend &amp; frontend**
+```bash
+git clone -b kel1-be-integrate https://github.com/muhamadabel/Be-SIA-UGN-kelompok1.git Be-SIA-UGN
+git clone -b kel1-fe-integrate https://github.com/muhamadabel/Fe-SIA-UGN-kelompok1.git Fe-SIA-UGN-kelompok1
+```
+
+**2. Backend — Laravel (via Laragon)** — salin folder `Be-SIA-UGN` ke `C:\laragon\www\`
 ```bash
 cd C:\laragon\www\Be-SIA-UGN
 composer install
 copy .env.example .env
 php artisan key:generate
-php artisan migrate --seed      # buat tabel + akun demo
+php artisan migrate --seed
 ```
-> [!NOTE]
-> Sesuaikan `.env` backend (nilai default Laragon):
-> ```env
-> APP_URL=http://localhost/Be-SIA-UGN/public
-> DB_DATABASE=be_sia_ugn
-> DB_USERNAME=root
-> DB_PASSWORD=
-> ```
-> Buat database kosong `be_sia_ugn` dulu (phpMyAdmin/HeidiSQL bawaan Laragon), lalu klik **Start All** di Laragon (Apache + MySQL).
-> ➜ API aktif di `http://localhost/Be-SIA-UGN/public/api`
+Sesuaikan `.env`: `APP_URL=http://localhost/Be-SIA-UGN/public`, `DB_DATABASE=be_sia_ugn`, `DB_USERNAME=root`, `DB_PASSWORD=` (kosong). Buat database kosong `be_sia_ugn`, lalu **Start All** di Laragon → API di `http://localhost/Be-SIA-UGN/public/api`.
 
-### 3️⃣ Frontend — Next.js
+**3. Frontend — Next.js**
 ```bash
 cd Fe-SIA-UGN-kelompok1
 npm install
-```
-Buat file `.env.local` berisi:
-```env
-NEXT_PUBLIC_API_BASE_URL=http://localhost/Be-SIA-UGN/public/api
-```
-Lalu jalankan di port **3001**:
-```bash
+# buat .env.local → NEXT_PUBLIC_API_BASE_URL=http://localhost/Be-SIA-UGN/public/api
 npm run dev -- -p 3001
 ```
-🔑 Akun demo (hasil seed): `dosen@gmail.com` / `dosen123`
+Akun demo (hasil seed): `dosen@gmail.com` / `dosen123`
 
-### 4️⃣ Jalankan Pengujian
-Pastikan BE + FE sudah berjalan, lalu di folder repo ini:
+**4. Arahkan test ke lokal lalu jalankan**
 ```bash
-mvn clean verify        # semua test + generate report HTML
+cd PPPL-UAS
+set BASE_URL=http://localhost:3001
+mvn clean verify
 ```
-
-> [!TIP]
-> FE jalan di port lain? → `set BASE_URL=http://localhost:PORT` dulu (Windows) sebelum `mvn`.
-> Jalankan satu modul saja → `mvn test -Dcucumber.filter.tags="@Login"`
-> Mau lihat browser bergerak saat demo → `set HEADLESS=false`
+</details>
 
 ## 📊 Hasil &amp; Laporan
 
-- ✅ **23 / 23 skenario PASS** (`mvn clean verify`)
+| Target | Hasil |
+|--------|-------|
+| **Lokal** (BE + FE berjalan) | ✅ **23 / 23** skenario PASS |
+| **Hosted** (default, saat ini) | ✅ **15 / 23** — 8 Input BKD menunggu redeploy endpoint BKD di VPS |
+
 - 📈 Report HTML otomatis → `target/cucumber-html-reports/`
 - 🐞 Bug report → [`docs/BUG-REPORT.md`](docs/BUG-REPORT.md)
 - 📋 Test suite EP/BVA → [`test-suite/TEST-SUITE.md`](test-suite/TEST-SUITE.md)

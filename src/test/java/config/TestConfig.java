@@ -10,8 +10,9 @@ public class TestConfig {
 
     private static final Dotenv ENV = loadEnv();
 
-    // Target aplikasi (FE Next.js). Lokal default port 3001.
-    public static final String BASE_URL = get("BASE_URL", "http://localhost:3001");
+    // Target aplikasi yang diuji. Default = hosted (tanpa perlu install BE/FE).
+    // Override ke lokal: set env BASE_URL=http://localhost:3001
+    public static final String BASE_URL = get("BASE_URL", "https://sia.trisuladana.com");
 
     // Akun dosen hasil seed BE.
     public static final String DOSEN_EMAIL = get("DOSEN_EMAIL", "dosen@gmail.com");
